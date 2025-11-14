@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="flat analytics icon.png">
+    <link rel="stylesheet" href="style.css">
+    <title>Finance Tracker Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="description" content="A clean, modern Flat-Design interface showcasing simplicity, clarity, and a smooth user experience.">
+    <meta name="keywords" content="monye,saved monye, save monye, calculat Expenses">
+    <meta name="author" content="Eng.Mohammad Ashraf">
+    
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <h1 class="app-title">Finance Tracker Pro</h1>
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </header>
+
+        <!-- Add Transaction Form -->
+        <section class="add-transaction">
+            <h2 style="margin-bottom: 20px;">Add Transaction</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="title">Transaction Title</label>
+                    <input type="text" id="title" placeholder="e.g., Salary, Rent..." required>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" required>
+                        <option value="salary">Salary</option>
+                        <option value="freelance">Freelance</option>
+                        <option value="investment">Investment</option>
+                        <option value="food">Food</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="bills">Bills</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group custom-category-container" id="custom-category-container">
+                    <label for="custom-category">Custom Category Name</label>
+                    <input type="text" id="custom-category" placeholder="Enter custom category name">
+                </div>
+                <div class="form-group">
+                    <label for="type">Transaction Type</label>
+                    <select id="type" required>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-add">Add Transaction</button>
+            </form>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="statistics">
+            <div class="stat-card">
+                <div class="stat-title">Total Balance</div>
+                <div class="stat-value balance" id="balance">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Income</div>
+                <div class="stat-value income" id="income">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Expenses</div>
+                <div class="stat-value expense" id="expense">$0.00</div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-container">
+                <div class="chart-title">Income vs Expenses</div>
+                <canvas id="trendChart" style="height: 350px; width: 564;"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Expenses by Category</div>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+            <div class="categories-container">
+                <h3 style="margin-bottom: 15px;">Income by Category</h3>
+                <div id="income-categories">
+                    <!-- Income categories will be dynamically added here -->
+                </div>
+            </div>
+            <div class="categories-container">
+                <h3 style="margin-bottom: 15px;">Expenses by Category</h3>
+                <div id="expense-categories">
+                    <!-- Expense categories will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions List -->
+        <section class="transactions-list">
+            <div class="transaction-header">Transaction History</div>
+            <div id="transactions-container">
+                <!-- Transactions will be dynamically added here -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const transactionForm = document.getElementById('transaction-form');
+        const titleInput = document.getElementById('title');
+        const amountInput = document.getElementById('amount');
+        const categorySelect = document.getElementById('category');
+        const customCategoryContainer = document.getElementById('custom-category-container');
+        const customCategoryInput = document.getElementById('custom-category');
+        const typeSelect = document.getElementById('type');
+        const balanceElement = document.getElementById('balance');
+        const incomeElement = document.getElementById('income');
+        const expenseElement = document.getElementById('expense');
+        const transactionsContainer = document.getElementById('transactions-container');
+        const incomeCategoriesContainer = document.getElementById('income-categories');
+        const expenseCategoriesContainer = document.getElementById('expense-categories');
+
+        // Initialize transactions array
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        // Chart instances
+        let trendChart, categoryChart;
+
+        // Theme Toggle
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', this.checked);
+            localStorage.setItem('darkMode', this.checked);
+            updateChartThemes();
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('darkMode') === 'true';
+        themeToggle.checked = savedTheme;
+        document.body.classList.toggle('dark-mode', savedTheme);
+
+        // Show/hide custom category input
+        categorySelect.addEventListener('change', function() {
+            if (this.value === 'other') {
+                customCategoryContainer.style.display = 'block';
+                customCategoryInput.required = true;
+            } else {
+                customCategoryContainer.style.display = 'none';
+                customCategoryInput.required = false;
+                customCategoryInput.value = '';
+            }
+        });
+
+        // Add Transaction
+        transactionForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = titleInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            let category = categorySelect.value;
+            const type = typeSelect.value;
+            
+            // If category is "other", use the custom category input
+            if (category === 'other') {
+                category = customCategoryInput.value.trim().toLowerCase();
+                if (!category) {
+                    alert('Please enter a custom category name');
+                    return;
+                }
+            }
+            
+            if (!title || isNaN(amount) || amount <= 0) {
+                alert('Please enter valid data');
+                return;
+            }
+            
+            const transaction = {
+                id: Date.now(),
+                title,
+                amount,
+                category,
+                type,
+                date: new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+            
+            transactions.push(transaction);
+            saveTransactions();
+            renderTransactions();
+            updateStatistics();
+            updateCharts();
+            updateCategories();
+            
+            // Reset form
+            transactionForm.reset();
+            customCategoryContainer.style.display = 'none';
+            customCategoryInput.required = false;
+            titleInput.focus();
+        });
+
+        // Delete Transaction
+        function deleteTransaction(id) {
+            const transactionElement = document.querySelector(`[data-id="${id}"]`);
+            if (transactionElement) {
+                transactionElement.classList.add('deleting');
+                setTimeout(() => {
+                    transactions = transactions.filter(transaction => transaction.id !== id);
+                    saveTransactions();
+                    renderTransactions();
+                    updateStatistics();
+                    updateCharts();
+                    updateCategories();
+                }, 500);
+            }
+        }
+
+        // Save to localStorage
+        function saveTransactions() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // Render Transactions
+        function renderTransactions() {
+            if (transactions.length === 0) {
+                transactionsContainer.innerHTML = '<div class="empty-state">No transactions recorded yet</div>';
+                return;
+            }
+            
+            // Sort transactions by date (newest first)
+            const sortedTransactions = [...transactions].sort((a, b) => b.id - a.id);
+            
+            transactionsContainer.innerHTML = sortedTransactions.map(transaction => `
+                <div class="transaction-item" data-id="${transaction.id}">
+                    <div class="transaction-info">
+                        <div class="transaction-name">${transaction.title}</div>
+                        <div class="transaction-details">
+                            <span class="transaction-category">${formatCategory(transaction.category)}</span>
+                            <span class="transaction-date">${transaction.date}</span>
+                        </div>
+                    </div>
+                    <div class="transaction-actions">
+                        <span class="transaction-amount ${transaction.type}-amount">
+                            ${transaction.type === 'income' ? '+' : '-'} $${transaction.amount.toFixed(2)}
+                        </span>
+                        <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">❌</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Format category name for display
+        function formatCategory(category) {
+            return category.charAt(0).toUpperCase() + category.slice(1);
+        }
+
+        // Update Statistics
+        function updateStatistics() {
+            const income = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const expense = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const balance = income - expense;
+            
+            incomeElement.textContent = `$${income.toFixed(2)}`;
+            expenseElement.textContent = `$${expense.toFixed(2)}`;
+            balanceElement.textContent = `$${balance.toFixed(2)}`;
+        }
+
+        // Update Categories
+        function updateCategories() {
+            // Income categories
+            const incomeCategories = {};
+            transactions
+                .filter(t => t.type === 'income')
+                .forEach(t => {
+                    incomeCategories[t.category] = (incomeCategories[t.category] || 0) + t.amount;
+                });
+            
+            incomeCategoriesContainer.innerHTML = Object.keys(incomeCategories).length > 0 
+                ? Object.entries(incomeCategories)
+                    .map(([category, amount]) => `
+                        <div class="category-item">
+                            <span class="category-name">${formatCategory(category)}</span>
+                            <span class="category-amount income-category">$${amount.toFixed(2)}</span>
+                        </div>
+                    `).join('')
+                : '<div class="empty-state">No income transactions</div>';
+            
+            // Expense categories
+            const expenseCategories = {};
+            transactions
+                .filter(t => t.type === 'expense')
+                .forEach(t => {
+                    expenseCategories[t.category] = (expenseCategories[t.category] || 0) + t.amount;
+                });
+            
+            expenseCategoriesContainer.innerHTML = Object.keys(expenseCategories).length > 0 
+                ? Object.entries(expenseCategories)
+                    .map(([category, amount]) => `
+                        <div class="category-item">
+                            <span class="category-name">${formatCategory(category)}</span>
+                            <span class="category-amount expense-category">$${amount.toFixed(2)}</span>
+                        </div>
+                    `).join('')
+                : '<div class="empty-state">No expense transactions</div>';
+        }
+
+        // Update Charts
+        function updateCharts() {
+            updateTrendChart();
+            updateCategoryChart();
+        }
+
+        // Update Trend Chart
+        function updateTrendChart() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // Group transactions by month
+            const monthlyData = {};
+            transactions.forEach(t => {
+                const date = new Date(t.id);
+                const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+                
+                if (!monthlyData[monthYear]) {
+                    monthlyData[monthYear] = { income: 0, expense: 0 };
+                }
+                
+                if (t.type === 'income') {
+                    monthlyData[monthYear].income += t.amount;
+                } else {
+                    monthlyData[monthYear].expense += t.amount;
+                }
+            });
+            
+            const labels = Object.keys(monthlyData).sort();
+            const incomeData = labels.map(label => monthlyData[label].income);
+            const expenseData = labels.map(label => monthlyData[label].expense);
+            
+            if (trendChart) {
+                trendChart.destroy();
+            }
+            
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: incomeData,
+                            borderColor: '#4CAF50',
+                            backgroundColor: 'rgba(76, 175, 80, 1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Expenses',
+                            data: expenseData,
+                            borderColor: '#E53935',
+                            backgroundColor: 'rgba(229, 57, 53, 1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Category Chart
+        function updateCategoryChart() {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            
+            // Group expenses by category
+            const categoryData = {};
+            transactions
+                .filter(t => t.type === 'expense')
+                .forEach(t => {
+                    categoryData[t.category] = (categoryData[t.category] || 0) + t.amount;
+                });
+            
+            const labels = Object.keys(categoryData).map(formatCategory);
+            const data = Object.values(categoryData);
+            
+            // Generate colors for each category
+            const backgroundColors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                '#9966FF', '#FF9F40', '#8AC926', '#1982C4'
+            ];
+            
+            if (categoryChart) {
+                categoryChart.destroy();
+            }
+            
+            categoryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update chart themes based on current mode
+        function updateChartThemes() {
+            if (trendChart) {
+                trendChart.update();
+            }
+            if (categoryChart) {
+                categoryChart.update();
+            }
+        }
+
+        // Initialize the app
+        renderTransactions();
+        updateStatistics();
+        updateCategories();
+        updateCharts();
+    </script>
+</body>
+</html>

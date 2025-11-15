@@ -428,7 +428,7 @@
         }
 
         @media (max-width: 900px) {
-            .charts-section, .categories-section {
+             .categories-section {
                 grid-template-columns: 1fr;
             }
             #trendChart{
@@ -438,10 +438,14 @@
             .chart-container{
                 width: 346px;
                 height: 450px;
+                margin-left: 10px;
             }
         }
 
         @media (max-width: 600px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
             .statistics {
                 grid-template-columns: 1fr;
             }
@@ -461,3 +465,5 @@
                 height: 50px;
             }
         }
+
+

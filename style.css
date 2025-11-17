@@ -239,6 +239,7 @@
             box-shadow: var(--shadow);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass);
+            min-height: 300px;
         }
 
         body.dark-mode .chart-container {
@@ -427,43 +428,211 @@
             color: #aaa;
         }
 
-        @media (max-width: 900px) {
-             .categories-section {
-                grid-template-columns: 1fr;
+        /* Responsive Design */
+
+        /* Large Desktop (1024px and up) - Default styles apply */
+
+        /* Small Desktop (1024px) */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 15px;
             }
-            #trendChart{
-                width: 50px;
-                height: 50px;
+            .app-title {
+                font-size: 24px;
             }
-            .chart-container{
-                width: 346px;
-                height: 450px;
-                margin-left: 10px;
+            .charts-section {
+                gap: 15px;
+            }
+            .categories-section {
+                gap: 15px;
             }
         }
 
-        @media (max-width: 600px) {
+        /* Tablet (768px) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .app-title {
+                font-size: 22px;
+            }
+            .add-transaction {
+                padding: 20px;
+            }
+            .statistics {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .stat-card {
+                padding: 15px;
+            }
+            .stat-value {
+                font-size: 20px;
+            }
             .charts-section {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .chart-container {
+                padding: 15px;
+            }
+            .categories-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .categories-container {
+                padding: 15px;
+            }
+            .transaction-item {
+                padding: 12px 15px;
+            }
+            .transaction-name {
+                font-size: 14px;
+            }
+            .transaction-amount {
+                font-size: 14px;
+            }
+        }
+
+        /* Mobile (480px) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .app-title {
+                font-size: 20px;
+            }
+            .add-transaction {
+                padding: 15px;
+            }
+            .form-group {
+                margin-bottom: 12px;
+            }
+            input, select {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            .btn-add {
+                padding: 12px 16px;
+                font-size: 14px;
             }
             .statistics {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
-            
+            .stat-card {
+                padding: 12px;
+            }
+            .stat-title {
+                font-size: 12px;
+            }
+            .stat-value {
+                font-size: 18px;
+            }
+            .charts-section {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .chart-container {
+                padding: 12px;
+            }
+            .chart-title {
+                font-size: 16px;
+            }
+            .categories-section {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .categories-container {
+                padding: 12px;
+            }
+            .category-item {
+                padding: 8px 0;
+            }
+            .transaction-header {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
             .transaction-item {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 10px 12px;
             }
-            
-            .transaction-actions {
-                margin-top: 10px;
+            .transaction-info {
                 width: 100%;
-                justify-content: flex-end;
             }
-             #trendChart{
-                width: 50px;
-                height: 50px;
+            .transaction-actions {
+                margin-top: 8px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            .transaction-amount {
+                margin-right: 0;
+            }
+            .btn-delete {
+                font-size: 16px;
             }
         }
 
-
+        /* Small Mobile (320px) */
+        @media (max-width: 320px) {
+            .container {
+                padding: 5px;
+            }
+            .app-title {
+                font-size: 18px;
+            }
+            .add-transaction {
+                padding: 10px;
+            }
+            input, select {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            .btn-add {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .stat-card {
+                padding: 10px;
+            }
+            .stat-title {
+                font-size: 11px;
+            }
+            .stat-value {
+                font-size: 16px;
+            }
+            .chart-container {
+                padding: 10px;
+            }
+            .chart-title {
+                font-size: 14px;
+            }
+            .categories-container {
+                padding: 10px;
+            }
+            .transaction-header {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+            .transaction-item {
+                padding: 8px 10px;
+            }
+            .transaction-name {
+                font-size: 13px;
+            }
+            .transaction-details {
+                font-size: 11px;
+            }
+            .transaction-amount {
+                font-size: 13px;
+            }
+            .btn-delete {
+                font-size: 14px;
+            }
+        }

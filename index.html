@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="style.css">
     <title>Finance Tracker Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta name="description" content="A clean, modern Flat-Design interface showcasing simplicity, clarity, and a smooth user experience.">
-    <meta name="keywords" content="monye,saved monye, save monye, calculat Expenses">
+    <meta name="keywords" content="money, save money, calculate expenses">
     <meta name="author" content="Eng.Mohammad Ashraf">
     
 </head>
@@ -18,65 +19,71 @@
         <!-- Header Section -->
         <header>
             <h1 class="app-title">Finance Tracker Pro</h1>
-            <label class="theme-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
+            <div class="header-controls">
+                <select id="language-select">
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                </select>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </header>
 
         <!-- Add Transaction Form -->
         <section class="add-transaction">
-            <h2 style="margin-bottom: 20px;">Add Transaction</h2>
+            <h2 data-i18n="add-transaction">Add Transaction</h2>
             <form id="transaction-form">
                 <div class="form-group">
-                    <label for="title">Transaction Title</label>
-                    <input type="text" id="title" placeholder="e.g., Salary, Rent..." required>
+                    <label for="title" data-i18n="transaction-title">Transaction Title</label>
+                    <input type="text" id="title" data-i18n-placeholder="title-placeholder" placeholder="e.g., Salary, Rent..." required>
                 </div>
                 <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" placeholder="Enter amount" min="0" step="0.01" required>
+                    <label for="amount" data-i18n="amount">Amount</label>
+                    <input type="number" id="amount" data-i18n-placeholder="amount-placeholder" placeholder="Enter amount" min="0" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="category">Category</label>
+                    <label for="category" data-i18n="category">Category</label>
                     <select id="category" required>
-                        <option value="salary">Salary</option>
-                        <option value="freelance">Freelance</option>
-                        <option value="investment">Investment</option>
-                        <option value="food">Food</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="bills">Bills</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="transportation">Transportation</option>
-                        <option value="other">Other</option>
+                        <option value="salary" data-i18n="salary">Salary</option>
+                        <option value="freelance" data-i18n="freelance">Freelance</option>
+                        <option value="investment" data-i18n="investment">Investment</option>
+                        <option value="food" data-i18n="food">Food</option>
+                        <option value="entertainment" data-i18n="entertainment">Entertainment</option>
+                        <option value="bills" data-i18n="bills">Bills</option>
+                        <option value="shopping" data-i18n="shopping">Shopping</option>
+                        <option value="transportation" data-i18n="transportation">Transportation</option>
+                        <option value="other" data-i18n="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group custom-category-container" id="custom-category-container">
-                    <label for="custom-category">Custom Category Name</label>
-                    <input type="text" id="custom-category" placeholder="Enter custom category name">
+                    <label for="custom-category" data-i18n="custom-category">Custom Category Name</label>
+                    <input type="text" id="custom-category" data-i18n-placeholder="custom-category-placeholder" placeholder="Enter custom category name">
                 </div>
                 <div class="form-group">
-                    <label for="type">Transaction Type</label>
+                    <label for="type" data-i18n="transaction-type">Transaction Type</label>
                     <select id="type" required>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
+                        <option value="income" data-i18n="income">Income</option>
+                        <option value="expense" data-i18n="expense">Expense</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-add">Add Transaction</button>
+                <button type="submit" class="btn-add" data-i18n="add-transaction">Add Transaction</button>
             </form>
         </section>
 
         <!-- Statistics Section -->
         <section class="statistics">
             <div class="stat-card">
-                <div class="stat-title">Total Balance</div>
+                <div class="stat-title" data-i18n="total-balance">Total Balance</div>
                 <div class="stat-value balance" id="balance">$0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Total Income</div>
+                <div class="stat-title" data-i18n="total-income">Total Income</div>
                 <div class="stat-value income" id="income">$0.00</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Total Expenses</div>
+                <div class="stat-title" data-i18n="total-expenses">Total Expenses</div>
                 <div class="stat-value expense" id="expense">$0.00</div>
             </div>
         </section>
@@ -84,11 +91,11 @@
         <!-- Charts Section -->
         <section class="charts-section">
             <div class="chart-container">
-                <div class="chart-title">Income vs Expenses</div>
+                <div class="chart-title" data-i18n="income-vs-expenses">Income vs Expenses</div>
                 <canvas id="trendChart"></canvas>
             </div>
             <div class="chart-container">
-                <div class="chart-title">Expenses by Category</div>
+                <div class="chart-title" data-i18n="expenses-by-category">Expenses by Category</div>
                 <canvas id="categoryChart"></canvas>
             </div>
         </section>
@@ -96,13 +103,13 @@
         <!-- Categories Section -->
         <section class="categories-section">
             <div class="categories-container">
-                <h3 style="margin-bottom: 15px;">Income by Category</h3>
+                <h3 style="margin-bottom: 15px;" data-i18n="income-by-category">Income by Category</h3>
                 <div id="income-categories">
                     <!-- Income categories will be dynamically added here -->
                 </div>
             </div>
             <div class="categories-container">
-                <h3 style="margin-bottom: 15px;">Expenses by Category</h3>
+                <h3 style="margin-bottom: 15px;" data-i18n="expenses-by-category">Expenses by Category</h3>
                 <div id="expense-categories">
                     <!-- Expense categories will be dynamically added here -->
                 </div>
@@ -111,7 +118,7 @@
 
         <!-- Transactions List -->
         <section class="transactions-list">
-            <div class="transaction-header">Transaction History</div>
+            <div class="transaction-header" data-i18n="transaction-history">Transaction History</div>
             <div id="transactions-container">
                 <!-- Transactions will be dynamically added here -->
             </div>
@@ -119,8 +126,79 @@
     </div>
 
     <script>
+        // Translation objects
+        const translations = {
+            en: {
+                "add-transaction": "Add Transaction",
+                "transaction-title": "Transaction Title",
+                "title-placeholder": "e.g., Salary, Rent...",
+                "amount": "Amount",
+                "amount-placeholder": "Enter amount",
+                "category": "Category",
+                "salary": "Salary",
+                "freelance": "Freelance",
+                "investment": "Investment",
+                "food": "Food",
+                "entertainment": "Entertainment",
+                "bills": "Bills",
+                "shopping": "Shopping",
+                "transportation": "Transportation",
+                "other": "Other",
+                "custom-category": "Custom Category Name",
+                "custom-category-placeholder": "Enter custom category name",
+                "transaction-type": "Transaction Type",
+                "income": "Income",
+                "expense": "Expense",
+                "total-balance": "Total Balance",
+                "total-income": "Total Income",
+                "total-expenses": "Total Expenses",
+                "income-vs-expenses": "Income vs Expenses",
+                "expenses-by-category": "Expenses by Category",
+                "income-by-category": "Income by Category",
+                "expenses-by-category": "Expenses by Category",
+                "transaction-history": "Transaction History",
+                "no-transactions": "No transactions recorded yet",
+                "no-income-transactions": "No income transactions",
+                "no-expense-transactions": "No expense transactions"
+            },
+            ar: {
+                "add-transaction": "إضافة معاملة",
+                "transaction-title": "عنوان المعاملة",
+                "title-placeholder": "مثال: الراتب، الإيجار...",
+                "amount": "المبلغ",
+                "amount-placeholder": "أدخل المبلغ",
+                "category": "الفئة",
+                "salary": "الراتب",
+                "freelance": "العمل الحر",
+                "investment": "الاستثمار",
+                "food": "الطعام",
+                "entertainment": "الترفيه",
+                "bills": "الفواتير",
+                "shopping": "التسوق",
+                "transportation": "النقل",
+                "other": "أخرى",
+                "custom-category": "اسم الفئة المخصصة",
+                "custom-category-placeholder": "أدخل اسم الفئة المخصصة",
+                "transaction-type": "نوع المعاملة",
+                "income": "الدخل",
+                "expense": "المصروف",
+                "total-balance": "إجمالي الرصيد",
+                "total-income": "إجمالي الدخل",
+                "total-expenses": "إجمالي المصروفات",
+                "income-vs-expenses": "الدخل مقابل المصروفات",
+                "expenses-by-category": "المصروفات حسب الفئة",
+                "income-by-category": "الدخل حسب الفئة",
+                "expenses-by-category": "المصروفات حسب الفئة",
+                "transaction-history": "تاريخ المعاملات",
+                "no-transactions": "لا توجد معاملات مسجلة بعد",
+                "no-income-transactions": "لا توجد معاملات دخل",
+                "no-expense-transactions": "لا توجد معاملات مصروفات"
+            }
+        };
+
         // DOM Elements
         const themeToggle = document.getElementById('theme-toggle');
+        const languageSelect = document.getElementById('language-select');
         const transactionForm = document.getElementById('transaction-form');
         const titleInput = document.getElementById('title');
         const amountInput = document.getElementById('amount');
@@ -141,6 +219,54 @@
         // Chart instances
         let trendChart, categoryChart;
 
+        // Current language
+        let currentLanguage = localStorage.getItem('language') || 'en';
+
+        // Language Switch
+        languageSelect.addEventListener('change', function() {
+            currentLanguage = this.value;
+            localStorage.setItem('language', currentLanguage);
+            updateLanguage();
+            updateCharts(); // Update charts to reflect new language
+        });
+
+        // Function to update language
+        function updateLanguage() {
+            // Update HTML lang attribute
+            document.documentElement.lang = currentLanguage;
+
+            // Update text content for elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLanguage][key]) {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-i18n-placeholder');
+                if (translations[currentLanguage][key]) {
+                    element.placeholder = translations[currentLanguage][key];
+                }
+            });
+
+            // Update select options
+            document.querySelectorAll('option[data-i18n]').forEach(option => {
+                const key = option.getAttribute('data-i18n');
+                if (translations[currentLanguage][key]) {
+                    option.textContent = translations[currentLanguage][key];
+                }
+            });
+
+            // Apply RTL for Arabic
+            if (currentLanguage === 'ar') {
+                document.body.classList.add('rtl');
+            } else {
+                document.body.classList.remove('rtl');
+            }
+        }
+
         // Theme Toggle
         themeToggle.addEventListener('change', function() {
             document.body.classList.toggle('dark-mode', this.checked);
@@ -152,6 +278,10 @@
         const savedTheme = localStorage.getItem('darkMode') === 'true';
         themeToggle.checked = savedTheme;
         document.body.classList.toggle('dark-mode', savedTheme);
+
+        // Set initial language
+        languageSelect.value = currentLanguage;
+        updateLanguage();
 
         // Show/hide custom category input
         categorySelect.addEventListener('change', function() {
@@ -241,7 +371,7 @@
         // Render Transactions
         function renderTransactions() {
             if (transactions.length === 0) {
-                transactionsContainer.innerHTML = '<div class="empty-state">No transactions recorded yet</div>';
+                transactionsContainer.innerHTML = `<div class="empty-state">${translations[currentLanguage]['no-transactions'] || 'No transactions recorded yet'}</div>`;
                 return;
             }
             
@@ -277,16 +407,23 @@
             const income = transactions
                 .filter(t => t.type === 'income')
                 .reduce((sum, t) => sum + t.amount, 0);
-                
+
             const expense = transactions
                 .filter(t => t.type === 'expense')
                 .reduce((sum, t) => sum + t.amount, 0);
-                
+
             const balance = income - expense;
-            
+
             incomeElement.textContent = `$${income.toFixed(2)}`;
             expenseElement.textContent = `$${expense.toFixed(2)}`;
             balanceElement.textContent = `$${balance.toFixed(2)}`;
+
+            // Update balance color based on value
+            if (balance >= 0) {
+                balanceElement.className = 'stat-value balance positive';
+            } else {
+                balanceElement.className = 'stat-value balance negative';
+            }
         }
 
         // Update Categories
@@ -298,8 +435,8 @@
                 .forEach(t => {
                     incomeCategories[t.category] = (incomeCategories[t.category] || 0) + t.amount;
                 });
-            
-            incomeCategoriesContainer.innerHTML = Object.keys(incomeCategories).length > 0 
+
+            incomeCategoriesContainer.innerHTML = Object.keys(incomeCategories).length > 0
                 ? Object.entries(incomeCategories)
                     .map(([category, amount]) => `
                         <div class="category-item">
@@ -307,8 +444,8 @@
                             <span class="category-amount income-category">$${amount.toFixed(2)}</span>
                         </div>
                     `).join('')
-                : '<div class="empty-state">No income transactions</div>';
-            
+                : `<div class="empty-state">${translations[currentLanguage]['no-income-transactions'] || 'No income transactions'}</div>`;
+
             // Expense categories
             const expenseCategories = {};
             transactions
@@ -316,8 +453,8 @@
                 .forEach(t => {
                     expenseCategories[t.category] = (expenseCategories[t.category] || 0) + t.amount;
                 });
-            
-            expenseCategoriesContainer.innerHTML = Object.keys(expenseCategories).length > 0 
+
+            expenseCategoriesContainer.innerHTML = Object.keys(expenseCategories).length > 0
                 ? Object.entries(expenseCategories)
                     .map(([category, amount]) => `
                         <div class="category-item">
@@ -325,7 +462,7 @@
                             <span class="category-amount expense-category">$${amount.toFixed(2)}</span>
                         </div>
                     `).join('')
-                : '<div class="empty-state">No expense transactions</div>';
+                : `<div class="empty-state">${translations[currentLanguage]['no-expense-transactions'] || 'No expense transactions'}</div>`;
         }
 
         // Update Charts
@@ -337,50 +474,55 @@
         // Update Trend Chart
         function updateTrendChart() {
             const ctx = document.getElementById('trendChart').getContext('2d');
-            
+
             // Group transactions by month
             const monthlyData = {};
             transactions.forEach(t => {
                 const date = new Date(t.id);
                 const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
-                
+
                 if (!monthlyData[monthYear]) {
                     monthlyData[monthYear] = { income: 0, expense: 0 };
                 }
-                
+
                 if (t.type === 'income') {
                     monthlyData[monthYear].income += t.amount;
                 } else {
                     monthlyData[monthYear].expense += t.amount;
                 }
             });
-            
+
             const labels = Object.keys(monthlyData).sort();
             const incomeData = labels.map(label => monthlyData[label].income);
             const expenseData = labels.map(label => monthlyData[label].expense);
-            
+
             if (trendChart) {
                 trendChart.destroy();
             }
-            
+
+            // Determine colors based on theme
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const incomeColor = isDarkMode ? '#81C784' : '#4CAF50';
+            const expenseColor = isDarkMode ? '#EF5350' : '#E53935';
+
             trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Income',
+                            label: translations[currentLanguage]['income'] || 'Income',
                             data: incomeData,
-                            borderColor: '#4CAF50',
-                            backgroundColor: 'rgba(76, 175, 80, 1)',
+                            borderColor: incomeColor,
+                            backgroundColor: isDarkMode ? 'rgba(129, 199, 132, 0.2)' : 'rgba(76, 175, 80, 0.2)',
                             tension: 0.3,
                             fill: true
                         },
                         {
-                            label: 'Expenses',
+                            label: translations[currentLanguage]['expense'] || 'Expenses',
                             data: expenseData,
-                            borderColor: '#E53935',
-                            backgroundColor: 'rgba(229, 57, 53, 1)',
+                            borderColor: expenseColor,
+                            backgroundColor: isDarkMode ? 'rgba(239, 83, 80, 0.2)' : 'rgba(229, 57, 53, 0.2)',
                             tension: 0.3,
                             fill: true
                         }
@@ -405,7 +547,7 @@
         // Update Category Chart
         function updateCategoryChart() {
             const ctx = document.getElementById('categoryChart').getContext('2d');
-            
+
             // Group expenses by category
             const categoryData = {};
             transactions
@@ -413,20 +555,25 @@
                 .forEach(t => {
                     categoryData[t.category] = (categoryData[t.category] || 0) + t.amount;
                 });
-            
+
             const labels = Object.keys(categoryData).map(formatCategory);
             const data = Object.values(categoryData);
-            
-            // Generate colors for each category
-            const backgroundColors = [
-                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+
+            // Determine colors based on theme
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const backgroundColors = isDarkMode ? [
+                '#FF6B8A', '#4FC3F7', '#FFD54F', '#4DD0E1',
+                '#BA68C8', '#FFB74D', '#AED581', '#64B5F6'
+            ] : [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
                 '#9966FF', '#FF9F40', '#8AC926', '#1982C4'
             ];
-            
+            const borderColor = isDarkMode ? '#424242' : '#FFFFFF';
+
             if (categoryChart) {
                 categoryChart.destroy();
             }
-            
+
             categoryChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -434,7 +581,8 @@
                     datasets: [{
                         data: data,
                         backgroundColor: backgroundColors,
-                        borderWidth: 1
+                        borderColor: borderColor,
+                        borderWidth: 2
                     }]
                 },
                 options: {

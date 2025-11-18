@@ -44,6 +44,12 @@
             padding: 20px 0;
             margin-bottom: 30px;
         }
+        .header-controls{
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            gap: 50px;
+        }
 
         .app-title {
             font-size: 28px;
@@ -64,40 +70,43 @@
             height: 0;
         }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #f7e9a5 0%, #bcd8ff 100%);
+    transition: all .3s ease-in-out;
+    border-radius: 34px;
+}
 
-        .slider:before {
-            position: absolute;
-            content: "☀️";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
+.slider:before {
+    position: absolute;
+    content: "☀️";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    transition: all .3s ease-in-out;
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-size: 18px;
+}
 
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
+input:checked + .slider {
+    background: linear-gradient(90deg, #0d0d0d 0%, #0441e9 100%);
+}
 
-        input:checked + .slider:before {
-            transform: translateX(26px);
-            content: "  🌙";
-        }
+input:checked + .slider:before {
+    content: "🌙";
+    transform: scale(0.95);
+    font-size: 16px;
+}
 
-        /* Add Transaction Form */
+/* Add Transaction Form */
         .add-transaction {
             background: var(--light-card);
             padding: 25px;
@@ -636,3 +645,84 @@
                 font-size: 14px;
             }
         }
+
+/* RTL Support for Arabic */
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl .container {
+    direction: rtl;
+}
+
+.rtl header {
+    direction: ltr; /* Keep header controls LTR */
+}
+
+.rtl .header-controls {
+    direction: ltr;
+}
+
+.rtl .form-group {
+    text-align: right;
+}
+
+.rtl .form-group label {
+    text-align: right;
+}
+
+.rtl .form-group input,
+.rtl .form-group select {
+    text-align: right;
+}
+
+.rtl .stat-card {
+    text-align: right;
+}
+
+.rtl .chart-container {
+    text-align: right;
+}
+
+.rtl .categories-container {
+    text-align: right;
+}
+
+.rtl .category-item {
+    text-align: right;
+}
+
+.rtl .transaction-item {
+    text-align: right;
+}
+
+.rtl .transaction-info {
+    text-align: right;
+}
+
+.rtl .transaction-actions {
+    text-align: left; /* Keep amounts and delete button on the left */
+}
+
+.rtl .transaction-amount {
+    text-align: left;
+}
+
+.rtl .btn-delete {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+.rtl .empty-state {
+    text-align: center;
+}
+
+/* Font for Arabic */
+body {
+    font-family: 'Poppins', 'Noto Sans Arabic', sans-serif;
+}
+
+.rtl body {
+    font-family: 'Noto Sans Arabic', 'Poppins', sans-serif;
+}

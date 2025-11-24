@@ -296,6 +296,8 @@
         });
 
         // Add Transaction
+        let editTransactionId = null; // State for editing
+
         transactionForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -318,22 +320,46 @@
                 return;
             }
             
-            const transaction = {
-                id: Date.now(),
-                title,
-                amount,
-                category,
-                type,
-                date: new Date().toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })
-            };
+            if (editTransactionId) {
+                // Edit mode - update existing transaction
+                const index = transactions.findIndex(t => t.id === editTransactionId);
+                if (index !== -1) {
+                    transactions[index] = {
+                        ...transactions[index],
+                        title,
+                        amount,
+                        category,
+                        type,
+                        date: new Date().toLocaleString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                    };
+                }
+                editTransactionId = null;
+                transactionForm.querySelector('button[type="submit"]').textContent = translations[currentLanguage]['add-transaction'] || 'Add Transaction';
+            } else {
+                // Add mode - new transaction
+                const transaction = {
+                    id: Date.now(),
+                    title,
+                    amount,
+                    category,
+                    type,
+                    date: new Date().toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                };
+                transactions.push(transaction);
+            }
             
-            transactions.push(transaction);
             saveTransactions();
             renderTransactions();
             updateStatistics();
@@ -361,6 +387,41 @@
                     updateCategories();
                 }, 500);
             }
+        }
+
+        // Edit Transaction
+        function editTransaction(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (!transaction) return;
+
+            editTransactionId = id;
+
+            // Populate form fields with transaction data
+            titleInput.value = transaction.title;
+            amountInput.value = transaction.amount;
+            categorySelect.value = ['salary', 'freelance', 'investment', 'food', 'entertainment', 'bills', 'shopping', 'transportation'].includes(transaction.category)
+                ? transaction.category
+                : 'other';
+            // Show/hide custom category input accordingly
+            if (categorySelect.value === 'other') {
+                customCategoryContainer.style.display = 'block';
+                customCategoryInput.required = true;
+                if (!['salary', 'freelance', 'investment', 'food', 'entertainment', 'bills', 'shopping', 'transportation'].includes(transaction.category)) {
+                    customCategoryInput.value = transaction.category;
+                } else {
+                    customCategoryInput.value = '';
+                }
+            } else {
+                customCategoryContainer.style.display = 'none';
+                customCategoryInput.required = false;
+                customCategoryInput.value = '';
+            }
+            typeSelect.value = transaction.type;
+
+            // Change submit button text to "Update"
+            transactionForm.querySelector('button[type="submit"]').textContent = translations[currentLanguage]['update-transaction'] || 'Update Transaction';
+
+            titleInput.focus();
         }
 
         // Save to localStorage
@@ -391,7 +452,10 @@
                         <span class="transaction-amount ${transaction.type}-amount">
                             ${transaction.type === 'income' ? '+' : '-'} $${transaction.amount.toFixed(2)}
                         </span>
+                        <div class="transaction-button">
+                        <button class="editBtn" onclick="editTransaction(${transaction.id})" >✏️</button>
                         <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">❌</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
